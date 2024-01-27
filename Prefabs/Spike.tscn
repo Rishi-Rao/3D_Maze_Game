@@ -1,0 +1,29 @@
+[gd_scene load_steps=5 format=3 uid="uid://cta4ijvcjutef"]
+
+[ext_resource type="Script" path="res://Scripts/LevelSwitch.gd" id="1_qknei"]
+[ext_resource type="PackedScene" uid="uid://lg3u22a6bj42" path="res://Prefabs/Spikes.blend" id="2_v0evb"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_yo2dl"]
+albedo_color = Color(1, 0, 0, 1)
+metallic = 1.0
+roughness = 0.0
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2muf6"]
+size = Vector3(1.15703, 0.63266, 1)
+
+[node name="Area3D" type="Area3D" groups=["Trap"]]
+script = ExtResource("1_qknei")
+
+[node name="Spikes" parent="." instance=ExtResource("2_v0evb")]
+transform = Transform3D(0.284662, 0, 0, 0, 0.284662, 0, 0, 0, 0.284662, 0, 0, 0)
+
+[node name="Cone" parent="Spikes" index="0"]
+material_override = SubResource("StandardMaterial3D_yo2dl")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.42204, 0, -0.381285)
+shape = SubResource("BoxShape3D_2muf6")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+
+[editable path="Spikes"]

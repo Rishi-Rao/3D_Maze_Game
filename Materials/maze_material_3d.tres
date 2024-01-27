@@ -1,0 +1,15 @@
+[gd_resource type="StandardMaterial3D" load_steps=4 format=3 uid="uid://bellhsj70okex"]
+
+[ext_resource type="Texture2D" uid="uid://15mskht5ulee" path="res://Textures/textures/dark_brick_wall_diff_4k.png" id="1_lf3g1"]
+[ext_resource type="Texture2D" uid="uid://4vth7etor3a4" path="res://Textures/textures/dark_brick_wall_nor_gl_4k.png" id="2_uyhcf"]
+[ext_resource type="Texture2D" uid="uid://spf4mllkfd12" path="res://Textures/textures/dark_brick_wall_rough_4k.png" id="3_iwdtl"]
+
+[resource]
+albedo_color = Color(0.517647, 0.517647, 0.517647, 1)
+albedo_texture = ExtResource("1_lf3g1")
+roughness_texture = ExtResource("3_iwdtl")
+normal_enabled = true
+normal_texture = ExtResource("2_uyhcf")
+uv1_scale = Vector3(5, 5, 5)
+uv1_triplanar = true
+uv1_triplanar_sharpness = 20.393

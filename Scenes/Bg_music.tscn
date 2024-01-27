@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://b6y8rhqyg4ihk"]
+
+[ext_resource type="AudioStream" uid="uid://ccvuuofbcbca2" path="res://PARALLAX.mp3" id="1_2no4e"]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer"]
+stream = ExtResource("1_2no4e")
+autoplay = true
+mix_target = 1

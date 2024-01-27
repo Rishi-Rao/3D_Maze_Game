@@ -1,0 +1,951 @@
+[gd_scene load_steps=15 format=3 uid="uid://7w12eu5awjgi"]
+
+[ext_resource type="PackedScene" uid="uid://7ega7bh7meym" path="res://Prefabs/maze1.blend" id="1_mbnyf"]
+[ext_resource type="Script" path="res://Scripts/Lvl3.gd" id="1_wh81g"]
+[ext_resource type="ArrayMesh" uid="uid://cjdtyty8rf7i8" path="res://Materials/Maze_mesh.tres" id="2_4pwf8"]
+[ext_resource type="PackedScene" uid="uid://ckcsxxb7ojnod" path="res://Prefabs/Player.tscn" id="2_7smki"]
+[ext_resource type="PackedScene" uid="uid://bbbv3namlm0nq" path="res://Prefabs/Landmine.tscn" id="3_rrlmd"]
+[ext_resource type="Material" uid="uid://bellhsj70okex" path="res://Materials/maze_material_3d.tres" id="4_6dlfy"]
+[ext_resource type="Script" path="res://Scripts/LevelSwitch.gd" id="6_4shud"]
+[ext_resource type="PackedScene" uid="uid://cta4ijvcjutef" path="res://Prefabs/Spike.tscn" id="8_iyh7x"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_d4u6f"]
+sky_top_color = Color(0.564706, 0.698039, 0.898039, 1)
+sky_horizon_color = Color(0.691177, 0.71676, 0.75776, 1)
+ground_horizon_color = Color(0.691177, 0.71676, 0.75776, 1)
+
+[sub_resource type="Sky" id="Sky_5s331"]
+sky_material = SubResource("ProceduralSkyMaterial_d4u6f")
+
+[sub_resource type="Environment" id="Environment_w6sjv"]
+background_mode = 2
+sky = SubResource("Sky_5s331")
+tonemap_mode = 2
+glow_enabled = true
+fog_density = 0.0452
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xp8al"]
+size = Vector3(1, 9, 4)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b67kk"]
+roughness = 0.0
+emission_enabled = true
+emission = Color(0.976471, 1, 0.109804, 1)
+emission_energy_multiplier = 16.0
+grow = true
+
+[sub_resource type="BoxMesh" id="BoxMesh_k6tf7"]
+
+[node name="Node3D" type="Node3D"]
+script = ExtResource("1_wh81g")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_w6sjv")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 109.5, 379.32, -189.658)
+light_energy = 0.216
+shadow_enabled = true
+
+[node name="Player" parent="." groups=["Player"] instance=ExtResource("2_7smki")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -79.3097, 77, -96.8156)
+metadata/_edit_lock_ = true
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Player"]
+shadow_enabled = true
+metadata/_edit_lock_ = true
+
+[node name="MAP" type="Node3D" parent="."]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, -55, 80, -75)
+metadata/_edit_lock_ = true
+
+[node name="maze2" parent="MAP" instance=ExtResource("1_mbnyf")]
+transform = Transform3D(1.926, 0, 0, 0, 1.926, 0, 0, 0, 1.926, 0.4, -0.599999, -1.578)
+metadata/_edit_lock_ = true
+
+[node name="Plane" parent="MAP/maze2" index="0"]
+transform = Transform3D(1.28816, 0, 0, 0, 0, -0.796383, 0, 1.35308, 0, -0.266781, -0.24965, -2.24785)
+mesh = ExtResource("2_4pwf8")
+metadata/_edit_lock_ = true
+
+[node name="StaticBody3D" parent="MAP/maze2/Plane" index="0"]
+visible = false
+
+[node name="Ceiling" type="CSGBox3D" parent="MAP"]
+visible = false
+material_override = ExtResource("4_6dlfy")
+size = Vector3(13, 1, 13)
+material = ExtResource("4_6dlfy")
+metadata/_edit_lock_ = true
+
+[node name="End" type="Area3D" parent="MAP" groups=["end"]]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 3.6, -1, 4.6)
+script = ExtResource("6_4shud")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MAP/End"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+shape = SubResource("BoxShape3D_xp8al")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MAP/End"]
+transform = Transform3D(1.21528, 0, 0, 0, 9.23077, 0, 0, 0, 3.85802, 0, 2.65812, 0)
+material_override = SubResource("StandardMaterial3D_b67kk")
+gi_lightmap_scale = 3
+mesh = SubResource("BoxMesh_k6tf7")
+skeleton = NodePath("../CollisionShape3D")
+
+[node name="Landmines" type="Node3D" parent="."]
+metadata/_edit_lock_ = true
+
+[node name="Landmine" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -67.65, 74.696, -97.6841)
+metadata/_edit_lock_ = true
+
+[node name="Landmine2" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -59.9536, 74.696, -93.356)
+metadata/_edit_lock_ = true
+
+[node name="Landmine3" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -59.9536, 74.696, -101.764)
+metadata/_edit_lock_ = true
+
+[node name="Landmine4" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -56.1531, 74.696, -89.1906)
+metadata/_edit_lock_ = true
+
+[node name="Landmine5" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -72.345, 74.696, -89.1906)
+metadata/_edit_lock_ = true
+
+[node name="Landmine6" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -73.1643, 74.696, -76.8874)
+metadata/_edit_lock_ = true
+
+[node name="Landmine7" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -31.6519, 74.696, -76.8874)
+metadata/_edit_lock_ = true
+
+[node name="Landmine8" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -44.0304, 74.696, -76.8874)
+metadata/_edit_lock_ = true
+
+[node name="Landmine9" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -44.0304, 74.696, -80.609)
+metadata/_edit_lock_ = true
+
+[node name="Landmine10" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -55.9235, 74.696, -80.609)
+metadata/_edit_lock_ = true
+
+[node name="Landmine11" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -50.9074, 74.696, -93.3921)
+metadata/_edit_lock_ = true
+
+[node name="Landmine12" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -43.7068, 74.696, -89.0232)
+metadata/_edit_lock_ = true
+
+[node name="Landmine13" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -43.7068, 74.696, -89.0232)
+metadata/_edit_lock_ = true
+
+[node name="Landmine14" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -43.7877, 74.696, -63.8616)
+metadata/_edit_lock_ = true
+
+[node name="Landmine15" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -52.1209, 74.696, -64.0234)
+metadata/_edit_lock_ = true
+
+[node name="Landmine16" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -67.5739, 74.696, -60.2209)
+metadata/_edit_lock_ = true
+
+[node name="Landmine17" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -70.7292, 74.696, -51.8067)
+metadata/_edit_lock_ = true
+
+[node name="Landmine18" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -43.6259, 74.696, -51.7258)
+metadata/_edit_lock_ = true
+
+[node name="Landmine19" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -78.4152, 74.696, -67.9878)
+metadata/_edit_lock_ = true
+
+[node name="Landmine20" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -67.493, 74.696, -67.9878)
+metadata/_edit_lock_ = true
+
+[node name="Landmine21" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -40.0661, 74.696, -60.14)
+metadata/_edit_lock_ = true
+
+[node name="Landmine22" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -65.713, 74.696, -84.6543)
+metadata/_edit_lock_ = true
+
+[node name="Landmine23" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -79.8715, 74.696, -84.6543)
+metadata/_edit_lock_ = true
+
+[node name="Landmine24" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -41.5224, 74.696, -101.725)
+metadata/_edit_lock_ = true
+
+[node name="Landmine25" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -32.1374, 74.696, -92.9066)
+metadata/_edit_lock_ = true
+
+[node name="Landmine26" parent="Landmines" instance=ExtResource("3_rrlmd")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -34.16, 74.696, -80.3663)
+metadata/_edit_lock_ = true
+
+[node name="Spikes" type="Node3D" parent="."]
+metadata/_edit_lock_ = true
+
+[node name="Spike" parent="Spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -80.0264, 74.7484, -72.0312)
+metadata/_edit_lock_ = true
+
+[node name="Spike2" parent="Spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -70.8273, 74.7484, -72.4493)
+metadata/_edit_lock_ = true
+
+[node name="Spike3" parent="Spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -55.8936, 74.7484, -62.4736)
+metadata/_edit_lock_ = true
+
+[node name="Spike4" parent="Spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -56.3715, 74.7484, -76.2723)
+metadata/_edit_lock_ = true
+
+[node name="Spike5" parent="Spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -35.3715, 74.7484, -51.2723)
+metadata/_edit_lock_ = true
+
+[node name="Spike6" parent="Spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.4445, 74.7484, -51.2723)
+metadata/_edit_lock_ = true
+
+[node name="Spike7" parent="Spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.2653, 74.7484, -67.2812)
+metadata/_edit_lock_ = true
+
+[node name="Spike8" parent="Spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.2653, 74.7484, -62.9206)
+metadata/_edit_lock_ = true
+
+[node name="Spike9" parent="Spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.2653, 74.7484, -59.0976)
+metadata/_edit_lock_ = true
+
+[node name="Spike10" parent="Spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.2056, 74.7484, -55.9316)
+metadata/_edit_lock_ = true
+
+[node name="Spike11" parent="Spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.2056, 74.7484, -71.9316)
+metadata/_edit_lock_ = true
+
+[node name="Spike12" parent="Spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -51.8582, 74.7484, -76.2325)
+metadata/_edit_lock_ = true
+
+[node name="Spike13" parent="Spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -51.8582, 74.7484, -76.2325)
+metadata/_edit_lock_ = true
+
+[node name="Spike14" parent="Spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -59.9851, 74.7484, -67.4556)
+metadata/_edit_lock_ = true
+
+[node name="Spike15" parent="Spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -59.9851, 74.7484, -51.2832)
+metadata/_edit_lock_ = true
+
+[node name="Spike16" parent="Spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -80.1396, 74.7484, -92.8113)
+metadata/_edit_lock_ = true
+
+[node name="Spike17" parent="Spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -66.2427, 74.7484, -92.8113)
+metadata/_edit_lock_ = true
+
+[node name="Spike18" parent="Spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -59.7413, 74.7484, -84.2781)
+metadata/_edit_lock_ = true
+
+[node name="Spike19" parent="Spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50.6392, 74.7484, -97.1998)
+metadata/_edit_lock_ = true
+
+[node name="Spike20" parent="Spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -44.5441, 74.7484, -68.3495)
+metadata/_edit_lock_ = true
+
+[node name="Wall spikes" type="Node3D" parent="."]
+metadata/_edit_lock_ = true
+
+[node name="Area3D" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -60.1286, 74.6094, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D2" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -60.1286, 75.6585, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D3" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -60.1286, 76.7547, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D4" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -61.3999, 74.6094, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D5" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -61.3999, 75.6585, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D6" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -61.3999, 76.7547, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D7" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -62.4944, 74.6094, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D8" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -62.4944, 75.6585, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D9" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -62.4944, 76.7547, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D49" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -43.8657, 74.6094, -86.0851)
+metadata/_edit_lock_ = true
+
+[node name="Area3D50" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -43.8657, 75.6585, -86.0851)
+metadata/_edit_lock_ = true
+
+[node name="Area3D51" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -43.8657, 76.7547, -86.0851)
+metadata/_edit_lock_ = true
+
+[node name="Area3D52" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -45.137, 74.6094, -86.0851)
+metadata/_edit_lock_ = true
+
+[node name="Area3D53" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -45.137, 75.6585, -86.0851)
+metadata/_edit_lock_ = true
+
+[node name="Area3D54" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -45.137, 76.7547, -86.0851)
+metadata/_edit_lock_ = true
+
+[node name="Area3D55" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -46.2315, 74.6094, -86.0851)
+metadata/_edit_lock_ = true
+
+[node name="Area3D56" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -46.2315, 75.6585, -86.0851)
+metadata/_edit_lock_ = true
+
+[node name="Area3D57" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -46.2315, 76.7547, -86.0851)
+metadata/_edit_lock_ = true
+
+[node name="Area3D103" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -48.8658, 74.6094, -81.9222)
+metadata/_edit_lock_ = true
+
+[node name="Area3D104" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -48.8658, 75.6585, -81.9222)
+metadata/_edit_lock_ = true
+
+[node name="Area3D105" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -48.8658, 76.7547, -81.9222)
+metadata/_edit_lock_ = true
+
+[node name="Area3D106" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -50.1371, 74.6094, -81.9222)
+metadata/_edit_lock_ = true
+
+[node name="Area3D107" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -50.1371, 75.6585, -81.9222)
+metadata/_edit_lock_ = true
+
+[node name="Area3D108" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -50.1371, 76.7547, -81.9222)
+metadata/_edit_lock_ = true
+
+[node name="Area3D109" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -51.2315, 74.6094, -81.9222)
+metadata/_edit_lock_ = true
+
+[node name="Area3D110" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -51.2315, 75.6585, -81.9222)
+metadata/_edit_lock_ = true
+
+[node name="Area3D111" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -51.2315, 76.7547, -81.9222)
+metadata/_edit_lock_ = true
+
+[node name="Area3D112" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -62.9681, 74.6094, -77.9385)
+metadata/_edit_lock_ = true
+
+[node name="Area3D113" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -62.9681, 75.6585, -77.9385)
+metadata/_edit_lock_ = true
+
+[node name="Area3D114" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -62.9681, 76.7547, -77.9385)
+metadata/_edit_lock_ = true
+
+[node name="Area3D115" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -64.2394, 74.6094, -77.9385)
+metadata/_edit_lock_ = true
+
+[node name="Area3D116" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -64.2394, 75.6585, -77.9385)
+metadata/_edit_lock_ = true
+
+[node name="Area3D117" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -64.2394, 76.7547, -77.9385)
+metadata/_edit_lock_ = true
+
+[node name="Area3D118" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -65.3339, 74.6094, -77.9385)
+metadata/_edit_lock_ = true
+
+[node name="Area3D119" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -65.3339, 75.6585, -77.9385)
+metadata/_edit_lock_ = true
+
+[node name="Area3D120" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -65.3339, 76.7547, -77.9385)
+metadata/_edit_lock_ = true
+
+[node name="Area3D121" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -70.7761, 74.6094, -56.8464)
+metadata/_edit_lock_ = true
+
+[node name="Area3D122" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -70.7761, 75.6585, -56.8464)
+metadata/_edit_lock_ = true
+
+[node name="Area3D123" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -70.7761, 76.7547, -56.8464)
+metadata/_edit_lock_ = true
+
+[node name="Area3D124" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -72.0474, 74.6094, -56.8464)
+metadata/_edit_lock_ = true
+
+[node name="Area3D125" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -72.0474, 75.6585, -56.8464)
+metadata/_edit_lock_ = true
+
+[node name="Area3D126" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -72.0474, 76.7547, -56.8464)
+metadata/_edit_lock_ = true
+
+[node name="Area3D127" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -73.1419, 74.6094, -56.8464)
+metadata/_edit_lock_ = true
+
+[node name="Area3D128" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -73.1419, 75.6585, -56.8464)
+metadata/_edit_lock_ = true
+
+[node name="Area3D129" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -73.1419, 76.7547, -56.8464)
+metadata/_edit_lock_ = true
+
+[node name="Area3D130" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -62.3901, 74.6094, -52.7998)
+metadata/_edit_lock_ = true
+
+[node name="Area3D131" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -62.3901, 75.6585, -52.7998)
+metadata/_edit_lock_ = true
+
+[node name="Area3D132" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -62.3901, 76.7547, -52.7998)
+metadata/_edit_lock_ = true
+
+[node name="Area3D133" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -63.6614, 74.6094, -52.7998)
+metadata/_edit_lock_ = true
+
+[node name="Area3D134" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -63.6614, 75.6585, -52.7998)
+metadata/_edit_lock_ = true
+
+[node name="Area3D135" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -63.6614, 76.7547, -52.7998)
+metadata/_edit_lock_ = true
+
+[node name="Area3D136" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -64.7559, 74.6094, -52.7998)
+metadata/_edit_lock_ = true
+
+[node name="Area3D137" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -64.7559, 75.6585, -52.7998)
+metadata/_edit_lock_ = true
+
+[node name="Area3D138" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -64.7559, 76.7547, -52.7998)
+metadata/_edit_lock_ = true
+
+[node name="Area3D139" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -41.0567, 74.6094, -95.7614)
+metadata/_edit_lock_ = true
+
+[node name="Area3D140" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -41.0567, 75.6585, -95.7614)
+metadata/_edit_lock_ = true
+
+[node name="Area3D141" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -41.0567, 76.7547, -95.7614)
+metadata/_edit_lock_ = true
+
+[node name="Area3D142" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -41.0546, 74.6094, -94.4901)
+metadata/_edit_lock_ = true
+
+[node name="Area3D143" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -41.0546, 75.6585, -94.4901)
+metadata/_edit_lock_ = true
+
+[node name="Area3D144" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -41.0546, 76.7547, -94.4901)
+metadata/_edit_lock_ = true
+
+[node name="Area3D145" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -41.0528, 74.6094, -93.3956)
+metadata/_edit_lock_ = true
+
+[node name="Area3D146" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -41.0528, 75.6585, -93.3956)
+metadata/_edit_lock_ = true
+
+[node name="Area3D147" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -41.0528, 76.7547, -93.3956)
+metadata/_edit_lock_ = true
+
+[node name="Area3D148" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -36.9583, 74.6094, -73.0818)
+metadata/_edit_lock_ = true
+
+[node name="Area3D149" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -36.9583, 75.6585, -73.0818)
+metadata/_edit_lock_ = true
+
+[node name="Area3D150" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -36.9583, 76.7547, -73.0818)
+metadata/_edit_lock_ = true
+
+[node name="Area3D151" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -36.9562, 74.6094, -71.8105)
+metadata/_edit_lock_ = true
+
+[node name="Area3D152" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -36.9562, 75.6585, -71.8105)
+metadata/_edit_lock_ = true
+
+[node name="Area3D153" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -36.9562, 76.7547, -71.8105)
+metadata/_edit_lock_ = true
+
+[node name="Area3D154" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -36.9544, 74.6094, -70.716)
+metadata/_edit_lock_ = true
+
+[node name="Area3D155" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -36.9544, 75.6585, -70.716)
+metadata/_edit_lock_ = true
+
+[node name="Area3D156" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -36.9544, 76.7547, -70.716)
+metadata/_edit_lock_ = true
+
+[node name="Area3D157" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -48.9094, 74.6094, -58.2624)
+metadata/_edit_lock_ = true
+
+[node name="Area3D158" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -48.9094, 75.6585, -58.2624)
+metadata/_edit_lock_ = true
+
+[node name="Area3D159" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -48.9094, 76.7547, -58.2624)
+metadata/_edit_lock_ = true
+
+[node name="Area3D160" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -48.9073, 74.6094, -56.9911)
+metadata/_edit_lock_ = true
+
+[node name="Area3D161" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -48.9073, 75.6585, -56.9911)
+metadata/_edit_lock_ = true
+
+[node name="Area3D162" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -48.9073, 76.7547, -56.9911)
+metadata/_edit_lock_ = true
+
+[node name="Area3D163" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -48.9055, 74.6094, -55.8966)
+metadata/_edit_lock_ = true
+
+[node name="Area3D164" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -48.9055, 75.6585, -55.8966)
+metadata/_edit_lock_ = true
+
+[node name="Area3D165" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.00165801, 0.999999, -4.37113e-08, 0, -4.37114e-08, -1, -0.999999, -0.00165801, 7.24739e-11, -48.9055, 76.7547, -55.8966)
+metadata/_edit_lock_ = true
+
+[node name="Area3D58" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -39.0445, 74.6094, -82.146)
+metadata/_edit_lock_ = true
+
+[node name="Area3D59" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -39.0445, 75.6585, -82.146)
+metadata/_edit_lock_ = true
+
+[node name="Area3D60" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -39.0445, 76.7547, -82.146)
+metadata/_edit_lock_ = true
+
+[node name="Area3D61" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -39.0239, 74.6094, -83.4171)
+metadata/_edit_lock_ = true
+
+[node name="Area3D62" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -39.0239, 75.6585, -83.4171)
+metadata/_edit_lock_ = true
+
+[node name="Area3D63" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -39.0239, 76.7547, -83.4171)
+metadata/_edit_lock_ = true
+
+[node name="Area3D64" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -39.0062, 74.6094, -84.5114)
+metadata/_edit_lock_ = true
+
+[node name="Area3D65" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -39.0062, 75.6585, -84.5114)
+metadata/_edit_lock_ = true
+
+[node name="Area3D66" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -39.0062, 76.7547, -84.5114)
+metadata/_edit_lock_ = true
+
+[node name="Area3D67" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -54.7499, 74.6094, -71.3659)
+metadata/_edit_lock_ = true
+
+[node name="Area3D68" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -54.7499, 75.6585, -71.3659)
+metadata/_edit_lock_ = true
+
+[node name="Area3D69" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -54.7499, 76.7547, -71.3659)
+metadata/_edit_lock_ = true
+
+[node name="Area3D70" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -54.7294, 74.6094, -72.637)
+metadata/_edit_lock_ = true
+
+[node name="Area3D71" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -54.7294, 75.6585, -72.637)
+metadata/_edit_lock_ = true
+
+[node name="Area3D72" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -54.7294, 76.7547, -72.637)
+metadata/_edit_lock_ = true
+
+[node name="Area3D73" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -54.7117, 74.6094, -73.7314)
+metadata/_edit_lock_ = true
+
+[node name="Area3D74" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -54.7117, 75.6585, -73.7314)
+metadata/_edit_lock_ = true
+
+[node name="Area3D75" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -54.7117, 76.7547, -73.7314)
+metadata/_edit_lock_ = true
+
+[node name="Area3D94" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -46.7268, 74.6094, -71.3659)
+metadata/_edit_lock_ = true
+
+[node name="Area3D95" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -46.7268, 75.6585, -71.3659)
+metadata/_edit_lock_ = true
+
+[node name="Area3D96" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -46.7268, 76.7547, -71.3659)
+metadata/_edit_lock_ = true
+
+[node name="Area3D97" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -46.7063, 74.6094, -72.637)
+metadata/_edit_lock_ = true
+
+[node name="Area3D98" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -46.7063, 75.6585, -72.637)
+metadata/_edit_lock_ = true
+
+[node name="Area3D99" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -46.7063, 76.7547, -72.637)
+metadata/_edit_lock_ = true
+
+[node name="Area3D100" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -46.6886, 74.6094, -73.7314)
+metadata/_edit_lock_ = true
+
+[node name="Area3D101" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -46.6886, 75.6585, -73.7314)
+metadata/_edit_lock_ = true
+
+[node name="Area3D102" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-0.0161785, -0.999869, 4.37057e-08, 0, -4.37114e-08, -1, 0.999869, -0.0161785, 7.07184e-10, -46.6886, 76.7547, -73.7314)
+metadata/_edit_lock_ = true
+
+[node name="Area3D76" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, -0.000383979, 1.67774e-11, -5.55039e-17, -4.37114e-08, -1, 0.000383979, 1, -4.37114e-08, -64.6667, 74.6094, -65.3406)
+metadata/_edit_lock_ = true
+
+[node name="Area3D77" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, -0.000383979, 1.67774e-11, -5.55039e-17, -4.37114e-08, -1, 0.000383979, 1, -4.37114e-08, -64.6667, 75.6585, -65.3406)
+metadata/_edit_lock_ = true
+
+[node name="Area3D78" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, -0.000383979, 1.67774e-11, -5.55039e-17, -4.37114e-08, -1, 0.000383979, 1, -4.37114e-08, -64.6667, 76.7547, -65.3406)
+metadata/_edit_lock_ = true
+
+[node name="Area3D79" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, -0.000383979, 1.67774e-11, -5.55039e-17, -4.37114e-08, -1, 0.000383979, 1, -4.37114e-08, -65.938, 74.6094, -65.3411)
+metadata/_edit_lock_ = true
+
+[node name="Area3D80" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, -0.000383979, 1.67774e-11, -5.55039e-17, -4.37114e-08, -1, 0.000383979, 1, -4.37114e-08, -65.938, 75.6585, -65.3411)
+metadata/_edit_lock_ = true
+
+[node name="Area3D81" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, -0.000383979, 1.67774e-11, -5.55039e-17, -4.37114e-08, -1, 0.000383979, 1, -4.37114e-08, -65.938, 76.7547, -65.3411)
+metadata/_edit_lock_ = true
+
+[node name="Area3D82" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, -0.000383979, 1.67774e-11, -5.55039e-17, -4.37114e-08, -1, 0.000383979, 1, -4.37114e-08, -67.0325, 74.6094, -65.3415)
+metadata/_edit_lock_ = true
+
+[node name="Area3D83" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, -0.000383979, 1.67774e-11, -5.55039e-17, -4.37114e-08, -1, 0.000383979, 1, -4.37114e-08, -67.0325, 75.6585, -65.3415)
+metadata/_edit_lock_ = true
+
+[node name="Area3D84" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, -0.000383979, 1.67774e-11, -5.55039e-17, -4.37114e-08, -1, 0.000383979, 1, -4.37114e-08, -67.0325, 76.7547, -65.3415)
+metadata/_edit_lock_ = true
+
+[node name="Area3D85" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, -0.000383979, 1.67774e-11, -5.55039e-17, -4.37114e-08, -1, 0.000383979, 1, -4.37114e-08, -61.1529, 74.6094, -61.0217)
+metadata/_edit_lock_ = true
+
+[node name="Area3D86" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, -0.000383979, 1.67774e-11, -5.55039e-17, -4.37114e-08, -1, 0.000383979, 1, -4.37114e-08, -61.1529, 75.6585, -61.0217)
+metadata/_edit_lock_ = true
+
+[node name="Area3D87" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, -0.000383979, 1.67774e-11, -5.55039e-17, -4.37114e-08, -1, 0.000383979, 1, -4.37114e-08, -61.1529, 76.7547, -61.0217)
+metadata/_edit_lock_ = true
+
+[node name="Area3D88" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, -0.000383979, 1.67774e-11, -5.55039e-17, -4.37114e-08, -1, 0.000383979, 1, -4.37114e-08, -62.4242, 74.6094, -61.0221)
+metadata/_edit_lock_ = true
+
+[node name="Area3D89" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, -0.000383979, 1.67774e-11, -5.55039e-17, -4.37114e-08, -1, 0.000383979, 1, -4.37114e-08, -62.4242, 75.6585, -61.0221)
+metadata/_edit_lock_ = true
+
+[node name="Area3D90" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, -0.000383979, 1.67774e-11, -5.55039e-17, -4.37114e-08, -1, 0.000383979, 1, -4.37114e-08, -62.4242, 76.7547, -61.0221)
+metadata/_edit_lock_ = true
+
+[node name="Area3D91" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, -0.000383979, 1.67774e-11, -5.55039e-17, -4.37114e-08, -1, 0.000383979, 1, -4.37114e-08, -63.5187, 74.6094, -61.0226)
+metadata/_edit_lock_ = true
+
+[node name="Area3D92" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, -0.000383979, 1.67774e-11, -5.55039e-17, -4.37114e-08, -1, 0.000383979, 1, -4.37114e-08, -63.5187, 75.6585, -61.0226)
+metadata/_edit_lock_ = true
+
+[node name="Area3D93" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, -0.000383979, 1.67774e-11, -5.55039e-17, -4.37114e-08, -1, 0.000383979, 1, -4.37114e-08, -63.5187, 76.7547, -61.0226)
+metadata/_edit_lock_ = true
+
+[node name="Area3D10" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -63.7657, 74.6094, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D11" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -63.7657, 75.6585, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D12" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -63.7657, 76.7547, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D13" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -64.9067, 74.6094, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D14" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -64.9067, 75.6585, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D15" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -64.9067, 76.7547, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D16" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -66.178, 74.6094, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D17" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -66.178, 75.6585, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D18" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -66.178, 76.7547, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D19" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -67.2725, 74.6094, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D20" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -67.2725, 75.6585, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D21" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -67.2725, 76.7547, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D22" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -68.5438, 74.6094, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D23" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -68.5438, 75.6585, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D24" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, -68.5438, 76.7547, -90.3428)
+metadata/_edit_lock_ = true
+
+[node name="Area3D25" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -59.4306, 74.6094, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D26" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -59.4306, 75.6585, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D27" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -59.4306, 76.7547, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D28" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -60.7019, 74.6094, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D29" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -60.7019, 75.6585, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D30" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -60.7019, 76.7547, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D31" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -61.7964, 74.6094, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D32" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -61.7964, 75.6585, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D33" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -61.7964, 76.7547, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D34" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -63.0677, 74.6094, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D35" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -63.0677, 75.6585, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D36" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -63.0677, 76.7547, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D37" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -64.2087, 74.6094, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D38" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -64.2087, 75.6585, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D39" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -64.2087, 76.7547, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D40" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -65.48, 74.6094, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D41" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -65.48, 75.6585, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D42" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -65.48, 76.7547, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D43" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -66.5745, 74.6094, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D44" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -66.5745, 75.6585, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D45" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -66.5745, 76.7547, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D46" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -67.8458, 74.6094, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D47" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -67.8458, 75.6585, -88.2857)
+metadata/_edit_lock_ = true
+
+[node name="Area3D48" parent="Wall spikes" instance=ExtResource("8_iyh7x")]
+transform = Transform3D(-1, 8.74228e-08, 0, 3.82137e-15, 4.37114e-08, -1, -8.74228e-08, -1, -4.37114e-08, -67.8458, 76.7547, -88.2857)
+metadata/_edit_lock_ = true
+
+[connection signal="body_entered" from="MAP/End" to="MAP/End" method="_on_body_entered"]
+
+[editable path="MAP/maze2"]

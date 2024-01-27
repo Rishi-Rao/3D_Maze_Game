@@ -1,0 +1,63 @@
+[gd_scene load_steps=3 format=3 uid="uid://bdfxestcnkd4x"]
+
+[ext_resource type="Script" path="res://Scripts/Control.gd" id="1_nxi3d"]
+[ext_resource type="Texture2D" uid="uid://b3suokpb4wssv" path="res://Textures/download.jpg" id="2_k2lvb"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+script = ExtResource("1_nxi3d")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_right = 1151.0
+offset_bottom = 245.0
+theme_override_colors/font_color = Color(0.92549, 0.909804, 0.156863, 1)
+theme_override_colors/font_shadow_color = Color(1, 0, 0, 1)
+theme_override_colors/font_outline_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 100
+text = "YOU LOST"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Button" type="Button" parent="."]
+top_level = true
+layout_mode = 0
+offset_left = 737.0
+offset_top = 335.0
+offset_right = 983.0
+offset_bottom = 433.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.921569, 0, 0.929412, 1)
+theme_override_colors/font_hover_color = Color(0, 1, 0, 1)
+theme_override_font_sizes/font_size = 30
+text = "RETRY"
+
+[node name="Button2" type="Button" parent="."]
+top_level = true
+layout_mode = 0
+offset_left = 159.0
+offset_top = 335.0
+offset_right = 395.0
+offset_bottom = 433.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_pressed_color = Color(0.862745, 0.00784314, 0.701961, 1)
+theme_override_colors/font_hover_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+text = "QUIT"
+
+[node name="TextureRect" type="TextureRect" parent="."]
+modulate = Color(1, 1, 0, 1)
+show_behind_parent = true
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+texture = ExtResource("2_k2lvb")
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="pressed" from="Button2" to="." method="_on_button_2_pressed"]

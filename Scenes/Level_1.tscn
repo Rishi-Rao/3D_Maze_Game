@@ -1,0 +1,251 @@
+[gd_scene load_steps=12 format=3 uid="uid://dtg7wsgpjktqx"]
+
+[ext_resource type="Material" uid="uid://bwv7nrmn3brmi" path="res://Materials/Gnd.tres" id="1_608a2"]
+[ext_resource type="Material" uid="uid://2f0qq8komb2o" path="res://Materials/Walls.tres" id="2_7vv55"]
+[ext_resource type="PackedScene" uid="uid://ckcsxxb7ojnod" path="res://Prefabs/Player.tscn" id="3_w43d0"]
+[ext_resource type="Script" path="res://Scripts/LevelSwitch.gd" id="4_868ex"]
+[ext_resource type="Material" uid="uid://c132dgh662ahl" path="res://Materials/End.tres" id="5_s57yv"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_y7v0t"]
+sky_top_color = Color(0.564706, 0.698039, 0.898039, 1)
+sky_horizon_color = Color(0.691176, 0.71676, 0.75776, 1)
+ground_horizon_color = Color(0.691176, 0.71676, 0.75776, 1)
+
+[sub_resource type="Sky" id="Sky_cy4ur"]
+sky_material = SubResource("ProceduralSkyMaterial_y7v0t")
+
+[sub_resource type="Environment" id="Environment_njmqb"]
+background_mode = 2
+sky = SubResource("Sky_cy4ur")
+glow_strength = 0.0
+fog_enabled = true
+fog_light_color = Color(0.780392, 0.521569, 0.521569, 1)
+fog_light_energy = 1.9
+fog_density = 0.0593
+volumetric_fog_density = 0.6549
+volumetric_fog_albedo = Color(1, 0.415686, 0.384314, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vub01"]
+size = Vector3(1, 1, 3.84443)
+
+[sub_resource type="BoxMesh" id="BoxMesh_oaol2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4yqwq"]
+albedo_color = Color(1, 0, 0, 1)
+
+[node name="World" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_njmqb")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866023, -0.433016, 0.250001, 0, 0.499998, 0.866027, -0.500003, 0.749999, -0.43301, 4.54179, 15.7332, -7.86654)
+light_energy = 1.973
+light_volumetric_fog_energy = 1.649
+shadow_enabled = true
+
+[node name="Map" type="Node3D" parent="."]
+metadata/_edit_lock_ = true
+
+[node name="Ground" type="CSGBox3D" parent="Map"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+material_override = ExtResource("1_608a2")
+use_collision = true
+size = Vector3(20, 1, 20)
+metadata/_edit_lock_ = true
+
+[node name="RightWall" type="CSGBox3D" parent="Map"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 9.5)
+material_overlay = ExtResource("2_7vv55")
+use_collision = true
+size = Vector3(20, 3, 1)
+metadata/_edit_lock_ = true
+
+[node name="LeftWall" type="CSGBox3D" parent="Map"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -9.5)
+material_overlay = ExtResource("2_7vv55")
+use_collision = true
+size = Vector3(20, 3, 1)
+metadata/_edit_lock_ = true
+
+[node name="FrontWall" type="CSGBox3D" parent="Map"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 9.5, 1.5, 0)
+material_override = ExtResource("2_7vv55")
+material_overlay = ExtResource("2_7vv55")
+use_collision = true
+size = Vector3(20, 3, 1)
+metadata/_edit_lock_ = true
+
+[node name="BackWall" type="CSGBox3D" parent="Map"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -9.5, 1.5, 0)
+material_override = ExtResource("2_7vv55")
+material_overlay = ExtResource("2_7vv55")
+use_collision = true
+size = Vector3(20, 3, 1)
+metadata/_edit_lock_ = true
+
+[node name="Wall" type="CSGBox3D" parent="Map"]
+transform = Transform3D(-8.35632e-09, 0, 1, 0, 1, 0, -0.19117, 0, -4.37114e-08, 6.10633, 1.5, -7.29698)
+material_overlay = ExtResource("2_7vv55")
+use_collision = true
+size = Vector3(20, 3, 1)
+metadata/_edit_lock_ = true
+
+[node name="Wall2" type="CSGBox3D" parent="Map"]
+transform = Transform3D(0.141861, 0, 0, 0, 1.00967, 0, 0, 0, 0.986802, 4.04955, 1.48905, -2.07036)
+material_overlay = ExtResource("2_7vv55")
+use_collision = true
+size = Vector3(20, 3, 1)
+metadata/_edit_lock_ = true
+
+[node name="Wall3" type="CSGBox3D" parent="Map"]
+transform = Transform3D(-8.90941e-09, 0, -0.999571, 0, 0.999571, 0, 0.203824, 0, -4.36926e-08, 3.1285, 1.5, -3.64467)
+material_overlay = ExtResource("2_7vv55")
+use_collision = true
+size = Vector3(20, 3, 1)
+metadata/_edit_lock_ = true
+
+[node name="Wall6" type="CSGBox3D" parent="Map"]
+transform = Transform3D(0.14295, 0, 0, 0, 1, 0, 0, 0, 1, 2.18951, 1.5, -5.20156)
+material_override = ExtResource("2_7vv55")
+material_overlay = ExtResource("2_7vv55")
+use_collision = true
+size = Vector3(20, 3, 1)
+metadata/_edit_lock_ = true
+
+[node name="Wall13" type="CSGBox3D" parent="Map"]
+transform = Transform3D(0.14295, 0, 0, 0, 1, 0, 0, 0, 1, -6.14922, 1.38249, -2.59824)
+material_overlay = ExtResource("2_7vv55")
+use_collision = true
+size = Vector3(20, 3, 1)
+metadata/_edit_lock_ = true
+
+[node name="Wall14" type="CSGBox3D" parent="Map"]
+transform = Transform3D(0.141226, 0, 0, 0, 1, 0, 0, 0, 1, -8.60336, 1.5, 3.87713)
+material_overlay = ExtResource("2_7vv55")
+use_collision = true
+size = Vector3(20, 3, 1)
+metadata/_edit_lock_ = true
+
+[node name="Wall7" type="CSGBox3D" parent="Map"]
+transform = Transform3D(-0.00639481, 0, -0.999142, 0, 0.999571, 0, 0.21816, 0, -0.0292873, 0.730247, 1.5, -6.89185)
+material_overlay = ExtResource("2_7vv55")
+use_collision = true
+size = Vector3(20, 3, 1)
+metadata/_edit_lock_ = true
+
+[node name="Wall4" type="CSGBox3D" parent="Map"]
+transform = Transform3D(-0.0152629, 0, -0.999142, 0, 0.999571, 0, 0.520697, 0, -0.0292873, -1.97332, 1.35427, -4.03308)
+material_overlay = ExtResource("2_7vv55")
+use_collision = true
+size = Vector3(20, 3, 1)
+metadata/_edit_lock_ = true
+
+[node name="Wall10" type="CSGBox3D" parent="Map"]
+transform = Transform3D(-1.74202e-08, 0, -0.999571, 0, 0.999571, 0, 0.398528, 0, -4.36926e-08, 1.11582, 1.37267, 6.55985)
+material_overlay = ExtResource("2_7vv55")
+use_collision = true
+size = Vector3(14.5417, 3, 1)
+metadata/_edit_lock_ = true
+
+[node name="Wall8" type="CSGBox3D" parent="Map"]
+transform = Transform3D(-0.40679, -3.86944e-07, -0.0016636, 0, 0.999571, -0.000232495, 0.000677027, -0.000232495, -0.999569, 1.45324, 1.36519, 0.92959)
+material_override = ExtResource("2_7vv55")
+material_overlay = ExtResource("2_7vv55")
+use_collision = true
+size = Vector3(20, 3, 1)
+metadata/_edit_lock_ = true
+
+[node name="Wall11" type="CSGBox3D" parent="Map"]
+transform = Transform3D(-0.36072, 0, 8.73852e-08, 0, 0.999571, 0, -3.15351e-08, 0, -0.99957, -2.01202, 1.36684, 4.16746)
+material_override = ExtResource("2_7vv55")
+material_overlay = ExtResource("2_7vv55")
+use_collision = true
+size = Vector3(20, 3, 1)
+metadata/_edit_lock_ = true
+
+[node name="Wall5" type="CSGBox3D" parent="Map"]
+transform = Transform3D(-0.00488163, 0, -0.999142, 0, 0.999571, 0, 0.166538, 0, -0.0292873, -4.85839, 1.35427, -7.34826)
+material_overlay = ExtResource("2_7vv55")
+use_collision = true
+size = Vector3(20, 3, 1)
+material = ExtResource("2_7vv55")
+metadata/_edit_lock_ = true
+
+[node name="Wall15" type="CSGBox3D" parent="Map"]
+transform = Transform3D(-0.166609, 0, -0.000261704, 0, 0.999571, 0, 4.36208e-05, 0, -0.999571, 7.31654, 1.35427, 6.22618)
+material_overlay = ExtResource("2_7vv55")
+use_collision = true
+size = Vector3(20, 3, 1)
+metadata/_edit_lock_ = true
+
+[node name="Wall12" type="CSGBox3D" parent="Map"]
+transform = Transform3D(0.000868622, 0, -0.916087, 0, 1.04395, 0, 0.355494, 0, 0.00223839, -5.17693, 1.29113, 0.609305)
+material_override = ExtResource("2_7vv55")
+material_overlay = ExtResource("2_7vv55")
+use_collision = true
+size = Vector3(20, 3, 1)
+material = ExtResource("2_7vv55")
+metadata/_edit_lock_ = true
+
+[node name="Wall9" type="CSGBox3D" parent="Map"]
+transform = Transform3D(-0.00488163, 0, -0.999142, 0, 0.999571, 0, 0.166538, 0, -0.0292873, 4.98, 1.36539, 2.758)
+material_override = ExtResource("2_7vv55")
+material_overlay = ExtResource("2_7vv55")
+use_collision = true
+size = Vector3(20, 3, 1)
+metadata/_edit_lock_ = true
+
+[node name="Player" parent="." groups=["Player"] instance=ExtResource("3_w43d0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.657, 1, -8.055)
+metadata/_edit_lock_ = true
+
+[node name="End" type="Area3D" parent="." groups=["end"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 6.83749)
+script = ExtResource("4_868ex")
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="End"]
+shape = SubResource("BoxShape3D_vub01")
+metadata/_edit_lock_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="End"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 4.62305, 0, 0, 0)
+material_overlay = ExtResource("5_s57yv")
+mesh = SubResource("BoxMesh_oaol2")
+metadata/_edit_lock_ = true
+
+[node name="Trap1" type="Area3D" parent="." groups=["Trap"]]
+transform = Transform3D(0.00935475, 0, -0.999956, 0, 1, 0, 0.999956, 0, 0.00935475, 7.78012, -0.167558, -2.09756)
+script = ExtResource("4_868ex")
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Trap1"]
+shape = SubResource("BoxShape3D_vub01")
+metadata/_edit_lock_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Trap1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 4.62305, 0, 0, 0)
+material_overlay = SubResource("StandardMaterial3D_4yqwq")
+mesh = SubResource("BoxMesh_oaol2")
+metadata/_edit_lock_ = true
+
+[node name="Trap2" type="Area3D" parent="." groups=["Trap"]]
+transform = Transform3D(0.00935475, 0, -0.999956, 0, 1, 0, 0.999956, 0, 0.00935475, -3.47484, -0.167558, -2.58479)
+script = ExtResource("4_868ex")
+metadata/_edit_lock_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Trap2"]
+transform = Transform3D(0.944993, 0, 1.86265e-09, 0, 0.944993, 0, -1.86265e-09, 0, 0.944993, 0, 0, 0)
+shape = SubResource("BoxShape3D_vub01")
+metadata/_edit_lock_ = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Trap2"]
+transform = Transform3D(1.00206, 0, 0, 0, 1, 0, -9.31323e-10, 0, 3.60468, 0, 0, 0)
+material_overlay = SubResource("StandardMaterial3D_4yqwq")
+mesh = SubResource("BoxMesh_oaol2")
+metadata/_edit_lock_ = true
+
+[connection signal="body_entered" from="End" to="End" method="_on_body_entered"]
+[connection signal="body_entered" from="Trap1" to="Trap1" method="_on_body_entered"]
+[connection signal="body_entered" from="Trap2" to="Trap2" method="_on_body_entered"]
